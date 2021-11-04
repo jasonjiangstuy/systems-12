@@ -1,21 +1,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <dirent.h>
-
-
-#include <unistd.h>
-#include <fcntl.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <time.h>
 
-int main() {
-  printf("Statistics for directory: ./\n");
+
+
+int main(int argc, char *argv[]){
+
+  if( argc > 2 ) {
+      printf("Too many arguments supplied.\n");
+      return 0;
+   }
+   else if(argc != 2){
+      printf("Enter a directory to scan.\n");
+      return 0;
+   }
+   DIR *d = opendir(argv[1]);
+   struct dirent *entry;
+   if (d == NULL){
+     printf("%s\n", strerror(errno));
+     return 0;
+   }
+  printf("Statistics for directory: %s/\n", argv[1]);
 
   unsigned long directory_size = 0;
-  DIR *d = opendir("./");
-  struct dirent *entry;
+
   entry = readdir(d);
   while (entry != NULL) {
         struct stat entry_info;
